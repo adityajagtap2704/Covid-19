@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -94,6 +94,96 @@ const CountryStats = () => {
     }
   ];
 
+  // Update the risk level calculation based on country-specific metrics
+  const getRiskLevels = (country) => {
+    const casesPerMillion = country.casesPerOneMillion || 0;
+    const deathsPerMillion = country.deathsPerOneMillion || 0;
+    const recoveryRate = ((country.recovered / country.cases) * 100) || 0;
+
+    const currentLevel = 
+      (casesPerMillion > 200000 || deathsPerMillion > 3000 || recoveryRate < 65) ? 'High' :
+      (casesPerMillion > 100000 || deathsPerMillion > 1000 || recoveryRate < 85) ? 'Moderate' : 
+      'Low';
+
+    return {
+      currentLevel,
+      levels: {
+        High: {
+          level: 'High Risk',
+          color: 'text-red-600',
+          bg: 'bg-red-50',
+          borderColor: 'border-red-200',
+          description: 'Severe impact on healthcare system',
+          criteria: 'Cases/1M > 200K or Deaths/1M > 3K',
+          recoveryRate: '< 65%',
+          actualRecoveryRate: recoveryRate
+        },
+        Moderate: {
+          level: 'Moderate Risk',
+          color: 'text-yellow-600',
+          bg: 'bg-yellow-50',
+          borderColor: 'border-yellow-200',
+          description: 'Significant but manageable situation',
+          criteria: 'Cases/1M > 100K or Deaths/1M > 1K',
+          recoveryRate: '65% - 85%',
+          actualRecoveryRate: recoveryRate
+        },
+        Low: {
+          level: 'Low Risk',
+          color: 'text-green-600',
+          bg: 'bg-green-50',
+          borderColor: 'border-green-200',
+          description: 'Well-controlled situation',
+          criteria: 'Cases/1M < 100K and Deaths/1M < 1K',
+          recoveryRate: '> 85%',
+          actualRecoveryRate: recoveryRate
+        }
+      }
+    };
+  };
+
+  const riskAssessment = getRiskLevels(data);
+  
+  const statusCards = (
+    <div className="grid grid-cols-1 gap-6 mt-6">
+      <h3 className="text-xl font-bold text-gray-800">Risk Level Assessment</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {Object.entries(riskAssessment.levels).map(([key, level]) => (
+          <div 
+            key={key}
+            className={`p-6 rounded-xl border ${level.bg} ${
+              riskAssessment.currentLevel === key 
+                ? `${level.borderColor} border-2` 
+                : 'border-gray-200'
+            }`}
+          >
+            <div className={`text-2xl font-bold ${level.color} mb-2`}>
+              {level.level}
+            </div>
+            <div className="text-sm text-gray-600 mb-2">
+              {level.description}
+            </div>
+            <div className={`text-xs ${level.color} font-medium mb-3`}>
+              {level.criteria}
+            </div>
+            <div className="border-t border-gray-200 pt-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Recovery Rate:</span>
+                <div className="text-right">
+                  <div className={`text-sm font-medium ${level.color}`}>
+                    {level.recoveryRate}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       {/* Country Header */}
@@ -158,6 +248,9 @@ const CountryStats = () => {
           );
         })}
       </div>
+
+      {/* Additional Stats Section - Risk Level and Mortality Analysis */}
+      {statusCards}
 
       {/* Additional Metrics */}
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
