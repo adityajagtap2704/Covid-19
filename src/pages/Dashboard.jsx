@@ -33,46 +33,42 @@ const Dashboard = () => {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between space-x-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary-500 rounded-lg">
-                  <Globe className="h-6 w-6 text-white" />
+                <div className="p-2.5 bg-primary-500 rounded-lg">
+                  <Globe className="h-7 w-7 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">COVID-19 Dashboard</h1>
+                  <h1 className="text-2xl font-bold text-gray-900 leading-tight">COVID-19 Dashboard</h1>
                   <p className="text-sm text-gray-500">Global Statistics & Analysis</p>
                 </div>
+              </div>
+              <div className="w-80 flex-shrink-0">
+                <CountrySelector />
               </div>
             </div>
           </div>
         </header>
 
-        {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {loading ? (
             <LoadingState />
           ) : (
-            <div className="grid gap-6">
-              {/* Top Section: Country Selection and Filters */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-1">
-                  <CountrySelector />
-                </div>
-                <div className="lg:col-span-2">
-                  <MetricFilter />
-                </div>
-              </div>
-
+            <div className="grid gap-4">
               {/* Country Stats */}
               <div className="animate-fade-in">
                 <CountryStats />
               </div>
 
+              {/* Metric Filter - Moved here */}
+              <div className="animate-fade-in">
+                <MetricFilter />
+              </div>
+
               {/* Charts Section */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                 <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
                   <ComparisonChart />
                 </div>
