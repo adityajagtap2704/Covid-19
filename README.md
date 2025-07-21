@@ -28,4 +28,21 @@ This is a **React-based frontend dashboard** that visualizes global and country-
 ---
 
 
+## 🚀 Getting Started
 
+Follow these steps to run the project locally:
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/adityajagtap2704/Covid-19.git
+cd Covid-19
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+### 3. Start the App
+```bash
+npm start
+```
